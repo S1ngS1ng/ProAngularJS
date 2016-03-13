@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ToDo List</title>
+    <link rel="stylesheet" href="../Scripts/bootstrap-3.3.5-dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../Scripts/bootstrap-3.3.5-dist/css/bootstrap-theme.css"/>
+    <script src = "../Scripts/angular-1.4.7.js"></script>
+    <script>
+        var model = {
+            user:"Xing"
+        };
+
+        var todoApp = angular.module('todoApp', []);
+
+        todoApp.run(function($http){
+            $http.get("todo.json").success(function(data){
+                model.items = data;
+            });
+        });
+
+        todoApp.filter("checkedItems", function(){
+            return function(items, showComplete){
+                var resultArr = [];
+                angular.forEach(items, function(x){
+                    if(x.done == false||showComplete == true){
+                        resultArr.push(x);
+                    }
+                });
+                return resultArr;
+            }
+        });
+
+        /* CORRECT
+        todoApp.filter("checkedItems", function(){
+            return function(i, sC){
+                var resultArr = [];
+                angular.forEach(i, function(item){
+                    if(item.done == false||sC == true){
+                        resultArr.push(item);
+                    }
+                });
+                return resultArr;
+            }
+        });
+        */
+
+        /* WRONG!
+        todoApp.filter("uncheckedItems", function(items, showComplete){
+                var resultArr = [];
+                angular.forEach(items, function(item){
+                    if(item.done == false||showComplete == true){
+                        resultArr.push(item);
+                    }
+                });
+                return resultArr;
+        });
+        */
+
+        todoApp.controller("todoCtrl", function($scope){
+            $scope.toggleDiv = function(){
+                $scope.flag = !$scope.flag;
+            };
+
+
+
+
+            $scope.todo = model;
+
+            $scope.incompleteCount = function(){
+                var count = 0;
+                angular.forEach($scope.todo.items, function(item){
+                    if(!item.done){
+                        count ++;
+                    }
+                });
+                return count;
+            };
+
+            $scope.warningLevel = function(){
+                return $scope.incompleteCount() <3 ? "label-success": "label-warning";
+            };
+
+            $scope.addNewItem = function(actionText){
+                $scope.todo.items.push({action:actionText, done:false});
+            };
+        });
+
+        angular.element(document).ready(function(){
+            angular.bootstrap(document, ['todoApp']);
+        });
+
+        function slow(){
+            setTimeout(function(){
+                alert("slow");
+            }, 5000)
+        }
+
+        function fast(){
+            setTimeout(function(){
+                alert("fast");
+            }, 1000)
+        }
+    </script>
+</head>
+<body ng-controller = "todoCtrl">
+<div class="page-header">
+    <h1>
+        {{todo.user}}'s To Do List
+        <span class="label" ng-class = "warningLevel()" ng-hide = "incompleteCount()==0">{{incompleteCount()}}</span>
+        <span class="label label-info">{{todo.items.length}}</span>
+    </h1>
+</div>
+<div class="panel">
+    <div class="input-group">
+        <input class="form-control" ng-model = "actionText"/>
+        <span class="input-group-btn">
+            <button class="btn btn-default" ng-click = "addNewItem(actionText)">ADD</button>
+        </span>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Done</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat = "item in todo.items | checkedItems:showComplete | orderBy:'action'">
+            <td>{{item.action}}</td>
+            <td><input type="checkbox" ng-model = "item.done"/></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="checkbox-inline">
+        <lable><input type="checkbox" ng-model = "showComplete"/>Show Complete</lable>
+    </div>
+</div>
+
+<div class="panel">
+    <h2>Asynchronous Test</h2>
+    <button onclick = "slow()" id = "slow">SLOW</button>
+    <button onclick = "fast()" id = "fast">FAST</button>
+</div>
+<button ng-click="toggleDiv()">Toggle</button>
+<div class="panel" ng-show="flag">
+    <p>This is the text</p>
+</div>
+</body>
+</html>

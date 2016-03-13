@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../Scripts/bootstrap-3.3.5-dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../Scripts/bootstrap-3.3.5-dist/css/bootstrap-theme.css"/>
+    <script src = "../Scripts/angular-1.4.7.js"></script>
+    <script type = "text/javascript">
+        //Define a function
+        function myFunc(){
+            console.log("This is statement");
+        }
+
+        //Function invocation
+        var myF = function(name, date) {
+            console.log("This OOOOOO is statement");
+            console.log("My name is"+name);
+            console.log("Today is" + date);
+        }("Xing", "Oct-15");
+
+        //Angular Method
+        console.log(angular.uppercase("Ssssss"));
+
+        //Javascript, Create new object via constructor
+        //Literal: myData = {};
+        var myData = new Object();
+        myData.name = "Xing";
+        myData.weather = "sunny";
+        var myData = {
+            name:"Xing L",
+            weather:"Cloudy",
+            printMessage: function(){
+                console.log("!!!Hello "+myData.name+". Today is "+ myData.weather);
+            }
+        };
+        var propName = "weather";
+        myData[propName] = "RAINY";
+        myData.printMessage();
+
+        //Extend
+        var extendedData = {
+            city: "Jersey City"
+        };
+        angular.extend(extendedData, myData);
+        extendedData.printMessage();
+        console.log(extendedData.city);
+        console.log(myData.name);
+
+        //Copy
+        var copiedData = {
+            state:"NJ"
+        };
+        angular.copy(myData, copiedData);
+        copiedData.printMessage();
+        console.log(copiedData.state);
+
+        var oString = [1,2];
+        var dString = [3,4];
+        var nString = angular.extend(oString, dString);
+        console.log(oString);
+
+        for (var prop in myData){
+            if(!angular.isFunction(myData[prop])) {
+                console.log("Property: " + prop);
+                console.log("Type: " + typeof(myData[prop]));
+                console.log("Value: " + myData[prop]);
+            }
+            else{
+                console.log("Property: " + prop);
+                console.log("Type: " + typeof(myData[prop]));
+                console.log("Value: This is function");
+            }
+        }
+
+        console.log(typeof(myData.printMessage));
+        console.log("printMessage" in myData);
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

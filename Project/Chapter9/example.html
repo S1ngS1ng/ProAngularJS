@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>AngularJS demo</title>
+    <link rel="stylesheet" href="../Scripts/bootstrap-3.3.5-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../Scripts/bootstrap-3.3.5-dist/css/bootstrap-theme.css">
+    <script src="../Scripts/angular-1.4.7.js"></script>
+    <script src="controller.js"></script>
+    <script src="filters.js"></script>
+    <script>
+
+        var myApp = angular.module("exampleApp", ["exampleApp.Controllers", "exampleApp.Filters", "exampleApp.Services", "exampleApp.Directives"]);
+
+        //Difference between config and run
+        //Sequence: exampleApp.Services.config ---> exampleApp.config ---> exampleApp.Services.run ---> exampleApp.run
+        myApp.constant("startTime", new Date().toLocaleString());
+        myApp.config(function(startTime){
+            console.log("Main Module config: " + startTime);
+        });
+        myApp.run(function(startTime){
+            console.log("Main Module run: " + startTime);
+        });
+        //
+
+
+        angular.module("exampleApp.Directives",[])
+                .directive("highlight", function($filter){
+                    var dayFilter = $filter("dayName");
+                    return function(scope, element, attrs){
+                        if(dayFilter(scope.day) == attrs["highlight"]){
+                            element.css("color", "red");
+                        }
+                    }
+                });
+        var now = new Date();
+        myApp.value("nowValue", now);
+
+        angular.module("exampleApp.Services",[])
+                .service("days", function(nowValue){
+                    this.today = nowValue.getDay();
+                    this.tomorrow = this.today+1;
+                })
+                .config(function(){
+                    console.log("Service Module config: (no time)");
+                })
+                .run(function(startTime){
+                    console.log("Service Module run: " + startTime);
+                });
+
+
+//                .controller("dayCtrl", function ($scope, days) {
+//                    //var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+//                    //$scope.day = dayNames[new Date().getDay()];
+//                    //$scope.tomorrow = dayNames[(new Date().getDay() + 1) % 7];
+//                    $scope.day = days.today;
+//                })
+//                .controller("tomorrowCtrl", function ($scope, days) {
+//                    //var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+//                    //$scope.day = dayNames[(new Date().getDay() + 1) % 7];
+//                    $scope.day = days.tomorrow;
+//                })
+//                .directive("highlight", function($filter){
+//                    var dayFilter = $filter("dayName");
+//
+//                    return function (scope, element, attrs){
+//                        if (dayFilter(scope.day) == attrs["highlight"]) {element.css("color", "red");}
+//                    }
+//                })
+//                .filter("dayName", function(){
+//                    var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+//                    return function(input){
+//                        return angular.isNumber(input)?dayNames[input]:input;
+//                    }
+//                })
+//                .service("days", function(nowValue){
+//                    this.today = nowValue.getDay();
+//                    this.tomorrow = this.today + 1;
+//                })
+    </script>
+</head>
+<body>
+<div class="panel" ng-controller="dayCtrl">
+    <div class="page-header">
+        <h3>AngularJS App</h3>
+    </div>
+    <h4 ng-controller="dayCtrl" highlight="Friday">Today is {{day||"(unknown)"|dayName}}</h4>
+    <h4 ng-controller="tomorrowCtrl">Tomorrow is {{day||"(unknown)"|dayName}}</h4>
+</div>
+</body>
+</html>

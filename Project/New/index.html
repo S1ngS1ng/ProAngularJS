@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link data-require="bootstrap-css@3.3.6" data-semver="3.3.6" rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css"/>
+    <script data-require="jquery@2.2.0" data-semver="2.2.0"
+            src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script data-require="bootstrap@3.3.6" data-semver="3.3.6"
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script data-require="angularjs@1.4.9" data-semver="1.4.9"
+            src="https://code.angularjs.org/1.4.9/angular.min.js"></script>
+    <link rel="stylesheet" href="style.css"/>
+    <script src="script.js"></script>
+</head>
+
+<body ng-app="dashboardApp">
+<div ng-controller="delegationCtrl">
+    <input type="text" ng-model="name"/>
+
+    {{name}}
+
+    {{1+1}}
+
+    <!-- delegation part -->
+    <div id="delegation" class="tab-pane">
+        <div class="row">
+            <div class="col-lg-4"><p class="font6b color2">Staff Accountants</p></div>
+            <div class="col-lg-6"><p>Can prepare and review Payment Runs</p></div>
+            <div class="col-lg-2"><p class="font7b color1" style="text-align:center" ng-click="AddStaffModal()">+Add</p>
+            </div>
+        </div>
+
+        <!--This is 2 column template -->
+        <div class="row" id="userprofiles" ng-show="userprofiles.length">
+
+            <div class="col-lg-4 first-column">
+                <div class="pl"><span class="glyphicon glyphicon-plus"></span></div>
+                <span style="vertical-align:middle" class="font6b">Add Custom</span>
+            </div>
+
+            <div ng-repeat="userProfile in userprofiles">
+                <div class="col-lg-4 second-column">
+                    <div>
+                        <div class="blue-band"></div>
+                        <div class="Staff-tab-title">
+                            <span class="font7b color2">{{userProfile.firstName}}{{userProfile.lastName}}</span><br>
+                            <span class="font7c color2">Staff Accountants</span><br>
+                        </div>
+                        <!--<div class="custom-gly">-->
+                            <!--<div class="glyphicon glyphicon-map-marker">-->
+                                <!--&nbsp{{line.Country}},{{line.State}},{{line.City}}-->
+                            <!--</div>-->
+                            <!--<br>-->
+                            <!--<div class="glyphicon glyphicon-envelope">&nbsp{{line.Email}}</div>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end of 2 column template-->
+    </div>
+
+
+    <!-- Add Staff popup window modal -->
+    <div class="modal fade add-Staff-modal" tabindex="-1" role="dialog" aria-labelledby="mysamllModalLabel">
+        <div class="modal-dia modal-lg">
+            <div class="modal-con">
+                <img class="modal-close" src="resources/images/close-modal.png" data-dismiss="modal" alt="close modal"
+                     onclick="StaffModalClose()"/>
+                <div class="modal-body-content modal-copy">
+                    <div class="add-staff-content">
+
+                        <p class="font6b color2 text-staff">Add Staff Acountants</p>
+                        <p class="font7c color2 text-staff">please ensure the Staff Accountant you wish to setup has a
+                            valid<span class="font7b color1">&nbsp@work</span><br>username and password</p>
+
+                        <form role="form" class="text-staff">
+                            <div class="user-first-column">
+                                <div class="row">
+                                    <div class="form-group col-lg-4">
+                                        <input type="text" class="form-control" name="FirstName" id="FirstName"
+                                               ng-model="firstName" placeholder="Enter First Name" ng-maxlength="40"
+                                               required/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-4">
+                                        <input type="text" class="form-control" name="LastName" id="LastName"
+                                               ng-model="lastName" placeholder="Enter Last Name" ng-maxlength="40"
+                                               required/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Staff-button">
+                                <button type="button" class="btn btn-default custom-cancel" id="StaffFormCancel"
+                                        ng-click="CancelStaffForm()">Cancel
+                                </button>
+                                <button type="button" class="btn btn-primary custom-add" id="StaffFormAdd"
+                                        ng-click="addStaffForm()" ng-hide="userstemplate">Add
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of delegation part -->
+
+
+</body>
+
+</html>
